@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="Adilson Andrade | Jeff Rayner">
+	<meta name="description" content="Sistema de Registro de Vendas Offline, para Evento Business Day">
+	<meta name="keywords" content="eventos, Business, senac, sorocaba, vendas, offline, Business day">
+	<meta name="copyright" content="© 2024 Senac">
+	<meta name="rating" content="general">
+
+	<title>Livro Caixa</title>
+	<link rel="shortcut icon" href="image\favicon.ico" />
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+	<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+		crossorigin="anonymous"></script>
+
+	<script src="js\qrcode.js"></script>
+	<script defer src="js\script.js"></script>
+
+</head>
+
+<body class="d-flex flex-column container bg-light">
+
+	<header class="d-flex flex-column justify-content-around gap-3 mb-3">
+		<img class="img-fluid" src="image\banner.png" alt="Logo do Evento">
+
+		<div class="row">
+
+			<div class="col">
+				<div class="card flex-column align-items-center p-2">
+					<h6 class="card-title">Vendas</h6>
+					<p class="card-text">R$ <span id="entradaValue">0.00</span></p>
+				</div>
+			</div>
+
+			<div class="col">
+				<div class="card flex-column align-items-center p-2">
+					<h6 class="card-title">Estornos</h6>
+					<p class="card-text">R$ <span id="saidaValue">0.00</span></p>
+				</div>
+			</div>
+
+			<div class="col">
+				<div class="card flex-column align-items-center p-2">
+					<h6 class="card-title">Saldo</h6>
+					<p class="card-text">R$ <span id="totalValue">0.00</span></p>
+				</div>
+			</div>
+
+		</div>
+
+	</header>
+
+	<main>
+
+		<!-- Modal: Tutorial -->
+		<div class="modal fade" id="modalTutorial" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-fullscreen-sm-down">
+				<div class="modal-content">
+
+					<div class="modal-header">
+						<h1 class="modal-title fw-bold fs-1">Tutorial</h1>
+						<button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+
+					<div class="modal-body ">
+						<p class="">
+							Faça o registro das vendas clicando em <button class="btn btn-success p-0 px-1">Registrar
+								Venda</button> e
+							informe o nome do produto, valor e o tipo de registro.<br><br>
+							Clicando em <button class="btn btn-danger p-0 px-1">Fechar Caixa</button> fará o download do
+							arquivo <i class="bi bi-filetype-csv p-2 text-success"></i> <br>
+							Em seguência abrirá o e-mail... <br> Você deverá anexar <u>manualmente</u> o arquivo <span
+								class="fw-bold">Livro Caixa.csv</span> baixado na pasta downloads.<br><br>
+							Informe no corpo do e-mail os dados de sua turma, produto ou serviço.<br><br>
+							Em caso de duvidas fazer o contato com:<br>
+							<span class="fw-bold" id="destinatarios"></span>
+						</p>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal: Cadastrar Produto -->
+		<div class="modal fade" id="modalCadastroProduto" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title">Cadastrar Item</h1>
+						<button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body" >
+						<label for="descricao">Descrição do Item</label>
+						<input id="idNomeProduto" type="text" class="form-control" placeholder="Produto XYZ" />
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-success" onclick="cadastrarProduto()">Cadastrar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal: Selecionar Produto -->
+		<div class="modal fade" id="modalSelecionarProduto" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-scrollable">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h2 class="modal-title">Selecionar Item <i class="bi bi-upc-scan"></i></h2>
+						<button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div id="modalListaProdutos" class="modal-body d-flex flex-column">
+						<p>Nenhum Item Cadastrado</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal: Registro de Venda -->
+		<div class="modal fade" id="modalRegistroVenda" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog ">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="exampleModalLabel">Registro de Venda </h1>
+						<button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body" id="teste">
+						<label for="descricao">Descrição do Item</label>
+						<input id="descricao" name="nomedescricao" type="text" class="form-control m-2" disabled />
+
+						<label for="valor">Valor do Item</label>
+						<input id="valor" name="valor1" type="number" class="form-control m-2" required autofocus />
+
+						<!-- <label for="tipoCadastro">Tipo de Registro</label> -->
+						<select id="tipoCadastro" name="tiposEntrada" class="form-select d-none">
+							<option value="Venda">Venda</option>
+							<option value="Estorno">Estorno</option>
+						</select>
+
+						
+						<!-- <div id="qrcode" class="d-flex container flex-column justify-content-center align-items-center"></div> -->
+
+
+					</div>
+					<div class="modal-footer">
+						<!-- <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button> -->
+						<button class="btn btn-success" id="bntGerarQRCode" onclick="gerarQRCode()">Gerar QrCode</button>
+						<button id="btnCadastrar" class="btn btn-success d-none" data-bs-dismiss="modal" onclick="registrarVenda()">Cadastrar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal: Registro de Estorno -->
+		<div class="modal fade" id="modalRegistroEstorno" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog ">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="exampleModalLabel">Registrar Estorno</h1>
+						<!-- <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+					</div>
+					<div class="modal-body">
+						<label for="nomedescricaoEstorno">Descrição do Item</label>
+						<input id="descricaoEstorno" name="nomedescricaoEstorno" type="text" class="form-control m-2" disabled />
+
+						<label for="valor1">Valor do Item</label>
+						<input id="valorEstorno" name="valor1" type="number" class="form-control m-2" disabled />
+
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-success" data-bs-dismiss="modal" onclick="registrarEstorno()">Estornar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card d-flex p-2 mb-4">
+			
+			<button class="btn btn-success m-2" data-bs-toggle="modal" data-bs-target="#modalCadastroProduto">
+				Cadastrar Itens de Venda
+			</button>
+
+			<button class="btn btn-success m-2" data-bs-toggle="modal" data-bs-target="#modalSelecionarProduto">
+				Registrar Venda
+			</button>
+
+		</div>
+
+	</main>
+
+	<footer>
+		
+		<table class="table">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Descrição</th>
+					<th scope="col">Valor</th>
+					<th scope="col">Editar</th>
+				</tr>
+			</thead>
+			<tbody id="tabelaVendas">
+				<tr>
+					<th scope="row">1</th>
+					<td>Produto Teste</td>
+					<td>R$ 199.00</td>
+					<td>Elementos</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<button class="btn btn-danger m-2" onclick="fecharLivroCaixa()">Fechar Caixa <i class="bi bi-journal-arrow-down"></i></button>
+	</footer>
+
+</body>
+
+</html>

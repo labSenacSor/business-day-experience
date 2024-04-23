@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Adilson Andrade | Jeff Rayner">
+    <meta name="description" content="Sistema de Registro de Vendas Offline, para Evento Business Day">
+    <meta name="keywords" content="eventos, business, senac, sorocaba, vendas, offline, Business day">
+    <meta name="copyright" content="© 2024 Senac">
+    <meta name="rating" content="general">
+
+    <title>Cupom Fiscal</title>
+    <link rel="shortcut icon" href="image\favicon.ico" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" type="text/css" href="css\cupomfiscal.css" />
+</head>
+
+<body class="container d-flex flex-column justify-content-center align-items-center vh-100 bg-light">
+
+    <!-- Venda Efetuado com sucesso -->
+    <div id="cupomFiscal" class="card text-center papelCortado" style="display: none;">
+        <div class="card-body">
+            <h1 class="mb-0">Business Day
+                <i class="text-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+                        class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                    </svg>
+                </i>
+                
+            </h1>
+            <h6 class="">CUPOM FISCAL</h6>
+            <p id="dataAtual" class="dashed">30/03/2024 - 11:57:52</p>
+
+            <h6 class="mb-0">Senac Sorocaba</h6>
+            <p id="cnpjEmpresa" class="dashed ">12.345.678/0001-99</p>
+
+            <div class="d-flex justify-content-between">
+                <p class="mb-1">Descrição:</p>
+                <p id="descricaoProduto" class="mb-1">Produto 1</p>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <p class="mb-1">Quantidade:</p>
+                <p class="mb-1">x 1</p>
+            </div>
+
+            <div class="d-flex justify-content-between dashed">
+                <p class="mb-1">Valor:</p>
+                <p id="valorProduto" class="mb-1">R$ 100,00</p>
+            </div>
+            <div class="d-flex justify-content-between">
+                <p class="mb-1">Total:</p>
+                <p id="valorProduto1" class="mb-1 ">R$ 100,00</p>
+            </div>
+
+            <p class="dashed">Operador: John Doe</p>
+            <h5 class="card-text">Agradecemos sua participação <br>no Business Day!</h5>
+        </div>
+    </div>
+
+    <!-- Venda não realizada -->
+    <div id="cupomErro" class="card text-center papelCortado" >
+        <div class="card-body">
+            <h1 class="dashed">Business Day</h1>
+            <h1 class="text-danger">
+                <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="currentColor"
+                    class="bi bi-x-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                    <path
+                        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                </svg>
+            </h1>
+            <h5 class="card-text">Voce já consumiu este Produto <br>no evento!</h5>
+        </div>
+    </div>
+
+
+    <script src="js\cupomfiscal.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,9 @@
+{
+    "redirects": [
+        {
+            "source": "/cupomfiscal",
+            "destination": "/cupomFiscal.html",
+            "permanent": false
+        }
+    ]
+}
